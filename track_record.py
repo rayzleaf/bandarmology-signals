@@ -244,6 +244,11 @@ closed_df = df[df["status"].isin(["WIN","LOSS"])].copy()
 
 if not closed_df.empty:
     closed_df = closed_df.sort_values("timestamp_wib").reset_index(drop=True)
+    # PENTING: ini PENJUMLAHAN P&L% tiap sinyal (cumsum), BUKAN compounded
+    # equity growth. Setiap sinyal diasumsikan berdiri sendiri dengan bobot
+    # yang sama -- bukan modal riil yang bertumbuh berurutan. Label di bawah
+    # sengaja dibuat eksplisit "Sum P&L" (bukan "Kumulatif") supaya tidak
+    # disalahartikan sebagai ROI portofolio.
     closed_df["cumulative"] = closed_df["pnl_pct"].cumsum()
 
     col_eq, col_dist = st.columns([3, 2])
@@ -251,9 +256,13 @@ if not closed_df.empty:
     with col_eq:
         st.markdown("""
         <div style='font-family:Inter,sans-serif;font-size:15px;font-weight:600;
-                    color:#1a2e1a;margin-bottom:8px'>Performa Kumulatif</div>
-        <div style='font-size:12px;color:#5a7a5a;margin-bottom:12px'>
-          P&L per sinyal + kurva kumulatif</div>
+                    color:#1a2e1a;margin-bottom:8px'>P&L per Sinyal</div>
+        <div style='font-size:12px;color:#5a7a5a;margin-bottom:4px'>
+          P&L tiap sinyal + jumlah kumulatif</div>
+        <div style='font-size:11px;color:#8a9e8a;margin-bottom:12px;font-style:italic'>
+          Catatan: garis "Sum P&L" adalah penjumlahan sederhana P&L% tiap
+          sinyal (bobot sama, tanpa compounding) -- bukan simulasi
+          pertumbuhan modal riil, yang tergantung ukuran posisi tiap trade.</div>
         """, unsafe_allow_html=True)
 
         fig = go.Figure()
@@ -268,10 +277,10 @@ if not closed_df.empty:
         fig.add_trace(go.Scatter(
             x=list(range(1, len(closed_df)+1)),
             y=closed_df["cumulative"],
-            name="Kumulatif",
+            name="Sum P&L (bukan compounded)",
             mode="lines",
             line=dict(color="#1b5e20", width=2.5),
-            hovertemplate="Kumulatif: %{y:+.2f}%<extra></extra>",
+            hovertemplate="Sum P&L: %{y:+.2f}%<extra></extra>",
         ))
         fig.add_hline(y=0, line_color="#c8e6c9", line_width=1.5)
         fig.update_layout(
@@ -280,7 +289,7 @@ if not closed_df.empty:
             margin=dict(l=0, r=0, t=8, b=0), height=280,
             xaxis=dict(title="Nomor sinyal", gridcolor="#e8f5e9",
                        showline=True, linecolor="#c8e6c9"),
-            yaxis=dict(title="P&L (%)", gridcolor="#e8f5e9",
+            yaxis=dict(title="P&L (%, sum -- bukan compounded)", gridcolor="#e8f5e9",
                        showline=True, linecolor="#c8e6c9"),
             legend=dict(bgcolor="#f1f8f1", bordercolor="#c8e6c9",
                         font=dict(size=11), orientation="h", y=1.08),
@@ -395,6 +404,9 @@ st.markdown("""
   <strong>⚠️ Disclaimer:</strong>
   BandarAI adalah alat analisis teknikal, bukan nasihat investasi.
   Performa masa lalu tidak menjamin hasil di masa depan.
+  Grafik "Sum P&L" menjumlahkan P&L% tiap sinyal secara setara -- bukan
+  simulasi pertumbuhan modal riil, yang tergantung ukuran posisi dan
+  jumlah sinyal yang dijalankan bersamaan.
   Selalu gunakan manajemen risiko dan stop-loss di setiap transaksi.
   Keputusan investasi sepenuhnya menjadi tanggung jawab masing-masing investor.
 </div>
