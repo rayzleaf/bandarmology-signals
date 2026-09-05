@@ -285,14 +285,23 @@ if not closed_df.empty:
         fig.add_hline(y=0, line_color="#c8e6c9", line_width=1.5)
         fig.update_layout(
             paper_bgcolor="#ffffff", plot_bgcolor="#fafffe",
-            font=dict(color="#3d5a3d", family="Inter", size=11),
+            font=dict(color="#1a2e1a", family="Inter", size=12),
             margin=dict(l=0, r=0, t=8, b=0), height=280,
-            xaxis=dict(title="Nomor sinyal", gridcolor="#e8f5e9",
-                       showline=True, linecolor="#c8e6c9"),
-            yaxis=dict(title="P&L (%, sum -- bukan compounded)", gridcolor="#e8f5e9",
-                       showline=True, linecolor="#c8e6c9"),
-            legend=dict(bgcolor="#f1f8f1", bordercolor="#c8e6c9",
-                        font=dict(size=11), orientation="h", y=1.08),
+            xaxis=dict(
+                title=dict(text="Nomor sinyal",
+                           font=dict(color="#1a2e1a", size=13)),
+                tickfont=dict(color="#2e4a2e", size=12),
+                gridcolor="#e8f5e9", showline=True, linecolor="#8fbf8f",
+            ),
+            yaxis=dict(
+                title=dict(text="P&L (%, sum -- bukan compounded)",
+                           font=dict(color="#1a2e1a", size=13)),
+                tickfont=dict(color="#2e4a2e", size=12),
+                gridcolor="#e8f5e9", showline=True, linecolor="#8fbf8f",
+            ),
+            legend=dict(bgcolor="#f1f8f1", bordercolor="#8fbf8f",
+                        font=dict(color="#1a2e1a", size=12),
+                        orientation="h", y=1.08),
             hovermode="x unified",
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -319,12 +328,20 @@ if not closed_df.empty:
                        annotation_font_size=11)
         fig2.update_layout(
             paper_bgcolor="#ffffff", plot_bgcolor="#fafffe",
-            font=dict(color="#3d5a3d", family="Inter", size=11),
-            margin=dict(l=0, r=0, t=8, b=0), height=280,
-            xaxis=dict(title="Return (%)", gridcolor="#e8f5e9",
-                       showline=True, linecolor="#c8e6c9"),
-            yaxis=dict(title="Count", gridcolor="#e8f5e9",
-                       showline=True, linecolor="#c8e6c9"),
+            font=dict(color="#1a2e1a", family="Inter", size=12),
+            margin=dict(l=0, r=0, t=30, b=0), height=280,
+            xaxis=dict(
+                title=dict(text="Return (%)",
+                           font=dict(color="#1a2e1a", size=13)),
+                tickfont=dict(color="#2e4a2e", size=12),
+                gridcolor="#e8f5e9", showline=True, linecolor="#8fbf8f",
+            ),
+            yaxis=dict(
+                title=dict(text="Count",
+                           font=dict(color="#1a2e1a", size=13)),
+                tickfont=dict(color="#2e4a2e", size=12),
+                gridcolor="#e8f5e9", showline=True, linecolor="#8fbf8f",
+            ),
             bargap=0.08,
         )
         st.plotly_chart(fig2, use_container_width=True)
